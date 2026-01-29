@@ -1,5 +1,6 @@
 
 import manager from '../manager'
+
 import pArray from './pArray'
 import pClass from './pClass'
 import pComponent from './pComponent'
