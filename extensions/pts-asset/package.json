@@ -1,0 +1,194 @@
+{
+    "$schema": "./@types/schema/package/index.json",
+    "package_version": 2,
+    "name": "pts-asset",
+    "version": "1.0.0",
+    "author": "pTSern",
+    "editor": ">=3.8.8",
+    "scripts": {
+        "preinstall": "node ./scripts/preinstall.js",
+        "build": "tsc",
+        "watch": "tsc -w"
+    },
+    "description": "i18n:pts-asset.description",
+    "main": "./dist/main.js",
+    "devDependencies": {
+        "@cocos/creator-types": "^3.8.0",
+        "@types/fs-extra": "^11.0.4",
+        "@types/node": "^18.17.1",
+        "fs-extra": "^10.0.0",
+        "typescript": "^5.8.2",
+        "vue": "^3.1.4"
+    },
+    "panels": {
+        "default": {
+            "title": "pTSPanel",
+            "main": "dist/panel/default",
+            "flags": {
+                "save": true
+            },
+            "size": {
+                "width": 400,
+                "height": 600
+            }
+        }
+    },
+    "contributions": {
+        "profile": {
+            "project": {
+                "foo": {
+                    "default": 1
+                },
+                "foo1": {
+                    "default": 0.4
+                },
+                "foo2": {
+                    "default": false
+                },
+                "foo3": {
+                    "default": 0
+                },
+                "foo4": {
+                    "default": "label"
+                },
+                "test_level": {
+                    "default": 0
+                }
+            }
+        },
+        "project": {
+            "tab1": {
+                "label": "test",
+                "content": {
+                    "foo": {
+                        "ui": "ui-num-input"
+                    },
+                    "foo1": {
+                        "ui": "ui-slider",
+                        "attributes": {
+                            "min": 0,
+                            "max": 1,
+                            "step": 0.1
+                        }
+                    },
+                    "foo2": {
+                        "ui": "ui-checkbox"
+                    },
+                    "foo3": {
+                        "ui": "ui-select",
+                        "items": [
+                            {
+                                "value": 0,
+                                "label": "ITEM 0"
+                            },
+                            {
+                                "value": 1,
+                                "label": "ITEM 1"
+                            },
+                            {
+                                "value": 2,
+                                "label": "ITEM 2"
+                            }
+                        ]
+                    }
+                }
+            },
+            "tab2": {
+                "label": "Test Level",
+                "content": {
+                    "test_level": {
+                        "ui": "ui-slider",
+                        "attributes": {
+                            "min": 0,
+                            "max": 10,
+                            "step": 1
+                        }
+                    }
+                }
+            }
+        },
+        "assets": {
+            "drop": [
+                {
+                    "type": "pts",
+                    "message": "drop-asset"
+                }
+            ],
+            "menu": {
+                "methods": "./dist/asset_menu.js",
+                "createMenu": "onCreateMenu",
+                "assetMenu": "onAssetMenu",
+                "dbMenu": "onDBMenu",
+                "panelMenu": "onPanelMenu"
+            }
+        },
+        "inspector": {
+            "section": {
+                "asset": {
+                    "pts": "./dist/pts.js",
+                    "*": "./dist/pts.js"
+                }
+            }
+        },
+        "menu": [
+            {
+                "path": "i18n:pts-asset",
+                "label": "i18n:pts-asset.panel",
+                "message": "panel-open",
+                "order": -1
+            },
+            {
+                "path": "i18n:pts-asset",
+                "label": "i18n:pts-asset.reload_asset",
+                "message": "reload"
+            },
+            {
+                "path": "i18n:pts-asset",
+                "label": "i18n:pts-asset.createz",
+                "message": "createz"
+            }
+        ],
+        "messages": {
+            "panel-open": {
+                "methods": [
+                    "onOpenPanel"
+                ]
+            },
+            "register-scripable": {
+                "methods": [
+                    "register"
+                ]
+            },
+            "reload": {
+                "methods": [
+                    "reload"
+                ]
+            },
+            "createz": {
+                "methods": [
+                    "onCreateMenuX"
+                ]
+            },
+            "selection:select": {
+                "methods": [
+                    "onSelectionSelect"
+                ]
+            },
+            "drop-asset": {
+                "methods": [
+                    "onDropAsset"
+                ]
+            }
+        },
+        "importer": {
+            "pts": {
+                "extensions": [
+                    "pts",
+                    ".pts"
+                ],
+                "assset_type": "JsonAsset",
+                "runtime_resource": true
+            }
+        }
+    }
+}
