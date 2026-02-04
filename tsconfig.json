@@ -8,6 +8,7 @@
     "target": "es2019",
     "module": "cjs",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSynctheticDefaultImports": true
   }
 }

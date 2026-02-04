@@ -3,5 +3,12 @@
   "uuid": "8c5f0177-99ae-4d84-89f7-4ac83f2eaaaf",
   "creator": {
     "version": "3.8.8"
+  },
+  "dependencies": {
+    "protobufjs": "^8.0.0"
+  },
+  "scripts": {
+    "build-proto:pbjs": "pbjs --dependency protobufjs/minimal.js --target static-module --wrap commonjs --out ./assets/pTS/proto/proto.js ./assets/pTS/proto/*.proto",
+    "build-proto:pbts": "pbts --main --out ./assets/pTS/proto/proto.d.ts ./assets/pTS/proto/*.js"
   }
 }
