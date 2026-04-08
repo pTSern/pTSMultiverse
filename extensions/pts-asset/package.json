@@ -127,7 +127,11 @@
                 "asset": {
                     "pts": "./dist/pts.js",
                     "*": "./dist/pts.js"
-                }
+                },
+				"node": {
+					"xcc.Component": "./dist/pts_node.js",
+                    "TestTest": "./dist/pts_node.js"
+				}
             }
         },
         "menu": [

@@ -1,0 +1,19 @@
+<div>
+    <title id="title">JSON Scriptable Object</title>
+    <ui-section class="config" style="margin: top 0.5em;" whole>
+        <header slot="header">
+            <ui-icon value="json" color></ui-icon>
+            <span class="name">JSON Scriptable Object</span>
+        </header>
+        <ui-prop>
+            <ui-label slot="label">Selected JSON Schema File:</ui-label>
+            <ui-asset slot="content" id="selectedFile" droppable="cc.JsonAsset" placeholder="Select a file to start editing"></ui-file>
+        </ui-prop>
+    </ui-section>
+    <div id="selectedFileContent"></div>
+    <ui-section whole>
+        <ui-button id="saveButton" class="controller" style="visibility: hidden;">Save Instance
+            <ui-icon value="save"></ui-icon>
+        </ui-button>
+    </ui-section>
+</div>

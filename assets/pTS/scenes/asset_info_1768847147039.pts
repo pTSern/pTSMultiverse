@@ -1,9 +1,10 @@
 {
-	"id": 1,
-	"ok": false,
-	"thau": {
-		"z": "asd",
-		"zxc": 10,
-		"cxz": null
-	}
+  "__type__": "pts",
+  "id": 1,
+  "ok": false,
+  "thau": {
+    "z": "asd",
+    "zxc": 10,
+    "cxz": null
+  }
 }

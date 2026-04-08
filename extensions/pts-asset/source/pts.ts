@@ -35,11 +35,16 @@ interface Meta {
 type Selector<$> = { $: Record<keyof $, any | null> } & { dispatch(str: string): void, assetList: Asset[], metaList: Meta[] };
 
 export const $ = {
-    view: "#custom-view"
+    view: "#custom-view",
+    ptsa: "#pts-asset"
 };
 
 export const template = `
 <div class="pts-container">
+    <ui-prop type="dump" dump="cc.Asset">
+        <ui-label slot="label" value="Dumper"></ui-label>
+        <ui-asset id="pts-asset" slot="content" droppable="pts" value></ui-asset>
+    </ui-prop>
     <ui-section class="component config" cache-expand="node-component:pTS" expand>
         <header class="component-header" slot="header">
             <ui-icon default="component" color="true" value="pTS"></ui-icon>
@@ -170,6 +175,25 @@ export function onChange(...ayny: any[]) {
 }
 
 export function ready(this: PanelThis) {
+    const _ae = this.$.ptsa;
+    let _is = false;
+    _ae.addEventListener('dragover', (e: any) => {
+        if(_is)return 
+            _is = true
+
+        for(const _key in e) {
+            console.log(`ORIGIN >>> ${_key}: `, (typeof e[_key]).toUpperCase(), " ---- ", e[_key]);
+        }
+        console.log("\n---------------------")
+
+        for(const _key in e.dataTransfer) {
+            console.log(`DATA TRANFER >>> ${_key}: `, (typeof e.dataTransfer[_key]).toUpperCase(), " ---- ", e.dataTransfer[_key]);
+        }
+
+        console.log("\n---------------------")
+        console.log(e.dataTransfer.getData('value'))
+
+    })
 
     //@ts-ignore
     this['onChange'] = function onChange(...any: any[]) {

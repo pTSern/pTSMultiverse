@@ -29,6 +29,7 @@ export const methods: { [key: string]: (...any: any) => any } = {
     },
     reload() { _load() },
     async onSelectionSelect(type: string, uuid: string) {
+        console.log("onSelectionSelect >>", type, uuid);
         if(type !== 'asset') return;
         const _out = await Editor.Message.request('asset-db', 'query-asset-info', uuid)
 

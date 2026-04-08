@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "types": [
+            "node",
+            "@cocos/creator-types/editor",
+            "../declarations/cc.custom-macro",
+            "../declarations/jsb",
+            "../declarations/cc",
+            "../declarations/cc.env"
+        ]
+    }
+
+}

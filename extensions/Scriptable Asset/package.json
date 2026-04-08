@@ -1,0 +1,83 @@
+{
+  "$schema": "./@types/schema/package/index.json",
+  "package_version": 2,
+  "name": "scriptable-asset",
+  "version": "1.0.0",
+  "author": "Marcelo Mancini",
+  "editor": ">=3.0.0",
+  "scripts": {
+    "preinstall": "node ./scripts/preinstall.js",
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "description": "i18n:scriptable-asset.description",
+  "title": "i18n:scriptable-asset.title",
+  "main": "./dist/main.js",
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "reflect-metadata": "0.2.1"
+  },
+  "devDependencies": {
+    "@cocos/creator-types": "^3.8.2",
+    "@types/fs-extra": "^9.0.5",
+    "@types/node": "^18.17.1"
+  },
+  "panels": {
+    "default": {
+      "title": "i18n:scriptable-asset.title",
+      "type": "dockable",
+      "main": "dist/panels/default",
+      "size": {
+        "min-width": 400,
+        "min-height": 300,
+        "width": 1024,
+        "height": 600
+      }
+    }
+  },
+  "contributions": {
+    "menu": [
+      {
+        "path": "i18n:menu.panel/scriptable-asset",
+        "label": "i18n:scriptable-asset.open_panel",
+        "message": "open-panel"
+      }
+    ],
+    "inspector": {
+      "section": {
+        "node": {
+          "ScriptableAsset": "./dist/contributions/inspector/scriptable-asset.js"
+        }
+      }
+    },
+    "asset-db": {
+      "mount": {
+        "path": "./assets",
+        "readonly": true
+      }
+    },
+    "profile": {
+      "editor": {
+        "scriptable-asset": {
+          "default": {
+            "path": null
+          },
+          "label": "scriptable-asset configuration."
+        }
+      }
+    },
+    "messages": {
+      "open-panel": {
+        "methods": [
+          "openPanel"
+        ]
+      },
+      "save-element": {
+        "methods": [
+          "default.saveElement"
+        ]
+      }
+    }
+  },
+  "_storeId": "b9ee857138fa2dc4bedff92be95ab24c"
+}

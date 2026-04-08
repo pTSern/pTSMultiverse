@@ -1,0 +1,41 @@
+{
+    "type": "WeaponAttributes",
+    "customTypes": {
+        "DamageType": [
+            "Blunt",
+            "Pierce",
+            "Slash"
+        ],
+        "DictionaryTest": {
+            "SomeProp": "Hello There",
+            "DontMix": "AAAAAAA"
+        }
+    },
+    "properties": [
+        {
+            "name": "Name",
+            "type": "CCString",
+            "value": "Sword"
+        },
+        {
+            "name": "damageType",
+            "type": ".DamageType",
+            "value": "2"
+        },
+        {
+            "name": "test",
+            "type": ".DictionaryTest",
+            "value": "Hello There"
+        },
+        {
+            "name": "Damage",
+            "type": "CCInteger",
+            "value": 0
+        },
+        {
+            "name": "Icon",
+            "type": "cc.SpriteFrame",
+            "value": "c22c1b4a-33e7-4d30-baf6-d4ee23b24816@f9941"
+        }
+    ]
+}

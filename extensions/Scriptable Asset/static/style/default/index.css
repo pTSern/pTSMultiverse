@@ -1,0 +1,10 @@
+#app {
+    color: var(--color-normal-contrast-weakest);
+    margin: auto;
+    width: 180px;
+}
+
+.controller {
+    margin-top: 0.5em;
+    padding-left: 16px;
+}
