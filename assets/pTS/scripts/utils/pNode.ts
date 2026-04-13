@@ -1,8 +1,6 @@
 
-import { IVec3Like, Node, v3 } from 'cc'
-import pArray from './pArray';
+import { Component, director, IVec3Like, Node } from 'cc'
 import pNumber from './pNumber';
-import pComponent from './pComponent';
 
 namespace _ {
     interface _IComp { node: Node }
@@ -21,6 +19,10 @@ namespace _ {
     export type TPosition<_TPosition extends IVec3Like = IVec3Like> = TNode | _TPosition | _IPosition<_TPosition>
     function _isPosition<_TPosition extends IVec3Like>(target: any): target is _IPosition<_TPosition> {
         return 'position' in target && 'is_world' in target;
+    }
+
+    export function search<_TComp extends Component>(comp: pFlex.TCtor<_TComp> | pFlex.TCtor<_TComp, any, true>, parent?: Node) {
+        return parent ? parent.getComponentInChildren(comp) : director.getScene().getComponentInChildren(comp);
     }
 
     export function getChildrenByName<const _T extends readonly _IGetChildOpt[]>(parent: TNode, opts: _T): pFlex.TExtracter<_T, 'name', Node> {

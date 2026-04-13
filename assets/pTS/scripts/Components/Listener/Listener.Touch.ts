@@ -1,12 +1,13 @@
-import { _decorator, EventHandler, NodeEventType } from "cc";
+import { _decorator, EventHandler, EventTouch, NodeEventType } from "cc";
 import { Base_Driver } from "../Base/Base.Driver";
 import { Types_TTouchType } from "../../types/Types.TTouchType";
 import { pArray, pClass } from "../../utils";
+import { Const_TouchType } from "../../Const/Const.TouchType";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("Listener_Touch")
-export class Listener_Touch extends Base_Driver<Types_TTouchType, [TouchEvent], void> implements Record<Types_TTouchType, EventHandler[]> {
+export class Listener_Touch extends Base_Driver<Types_TTouchType, [EventTouch], void> implements Record<Types_TTouchType, EventHandler[]> {
     @property({ type: [EventHandler] })
     onTouchStart: EventHandler[] = [];
 
@@ -19,13 +20,16 @@ export class Listener_Touch extends Base_Driver<Types_TTouchType, [TouchEvent], 
     @property({ type: [EventHandler] })
     onTouchEnd: EventHandler[] = [];
 
+    protected __preload(): void {
+        Const_TouchType.forEach(_type => this[`_${_type}`] = event => this.invoke(_type, event))
+    }
+
     protected onLoad(): void {
-        //console.log("Listener_Touch loaded. Setting up event listeners.", Const_TouchType);
-        //Const_TouchType.forEach(_type => this[`_${_type}`] = event => this.invoke(_type, event))
-        //this.node.on(NodeEventType.TOUCH_START, this._onTouchStart, this);
-        //this.node.on(NodeEventType.TOUCH_END, this._onTouchEnd, this);
-        //this.node.on(NodeEventType.TOUCH_MOVE, this._onTouchMove, this);
-        //this.node.on(NodeEventType.TOUCH_CANCEL, this._onTouchCancel, this);
+        Const_TouchType.forEach(_type => this[`_${_type}`] = event => this.invoke(_type, event))
+        this.node.on(NodeEventType.TOUCH_START, this._onTouchStart, this);
+        this.node.on(NodeEventType.TOUCH_END, this._onTouchEnd, this);
+        this.node.on(NodeEventType.TOUCH_MOVE, this._onTouchMove, this);
+        this.node.on(NodeEventType.TOUCH_CANCEL, this._onTouchCancel, this);
     }
 
     protected _events: Map<Types_TTouchType, pFlex.IBinder[]> = new Map();

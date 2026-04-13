@@ -1,5 +1,5 @@
 
-import { pClass } from ".";
+import pClass from "./pClass";
 import pArray from "./pArray";
 
 namespace pDriver {
