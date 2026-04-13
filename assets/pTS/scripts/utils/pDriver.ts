@@ -1,4 +1,5 @@
 
+import { pClass } from ".";
 import pArray from "./pArray";
 
 namespace pDriver {
@@ -7,14 +8,14 @@ namespace pDriver {
         _priority: number;
     }
 
-    export type TFlex<TEvent extends pFlex.TKey> = [TEvent, pFlex.TFunc, any, number?, pFlex.TArray<any>?][];
+    export type TFlex<TEvent extends pFlex.TKey, _TArgs, _TReturn> = [TEvent, pFlex.TFunc<_TArgs, _TReturn>, any, number?, pFlex.TArray<any>?][];
 
-    export interface IDriver<TEventType extends pFlex.TKey> {
-        add(event: TEventType, listener: pFlex.TArray<pFlex.THandler>, ...listeners: pFlex.THandler[]): void
-        remove(event: TEventType, listener: pFlex.TArray<pFlex.THandler>, ...listeners: pFlex.THandler[]): void
-        set(event: TEventType, listener: pFlex.TArray<pFlex.THandler>, ...listeners: pFlex.THandler[]): void
-        clear(event: TEventType): void
-        invoke(event: TEventType, ...args: any[]): any[];
+    export interface IDriver<_TKey extends pFlex.TKey, _TArgs, _TReturn> {
+        add(event: _TKey, listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>>, ...listeners: pFlex.THandler<_TArgs, _TReturn>[]): void
+        remove(event: _TKey, listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>>, ...listeners: pFlex.THandler<_TArgs, _TReturn>[]): void
+        set(event: _TKey, listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>>, ...listeners: pFlex.THandler<_TArgs, _TReturn>[]): void 
+        clear(event: _TKey): void
+        invoke(event: _TKey, ...args: any[]): any[]
     }
 
     export interface IHOption<TEvent extends pFlex.TKey, TSelf = any> {
@@ -25,9 +26,9 @@ namespace pDriver {
         after?: (self: TSelf) => void;
     }
 
-    export class Handler<TEvent extends pFlex.TKey> implements IDriver<TEvent> {
-        public static create<TEvent extends pFlex.TKey>(opt?: IHOption<TEvent, Handler<TEvent>>) {
-            const ret = new Handler<TEvent>();
+    export class Handler<_TEvent extends pFlex.TKey, _TArgs = any[], _TReturn = any> implements IDriver<_TEvent, _TArgs, _TReturn> {
+        public static create<TEvent extends pFlex.TKey, _TArgs, _TReturn>(opt?: IHOption<TEvent, Handler<TEvent>>) {
+            const ret = new Handler<TEvent, _TArgs, _TReturn>();
             ret._init(opt);
             return ret;
         }
@@ -38,7 +39,7 @@ namespace pDriver {
             this.warn = console.warn.bind(console, `${this.__alias_} Warning:`);
         }
 
-        protected _init({ key = (_key: any) => _key as TEvent, log = false, alias = '[EventDriver]', after = () => {} } : IHOption<TEvent> = {}): void {
+        protected _init({ key = (_key: any) => _key as _TEvent, log = false, alias = '[EventDriver]', after = () => {} } : IHOption<_TEvent> = {}): void {
             this.__key_   = key;
             this.__log_   = log;
             this.__alias_ = alias;
@@ -49,30 +50,30 @@ namespace pDriver {
         public error: pFlex.TFunc;
         public warn: pFlex.TFunc;
 
-        protected __waiters_: Partial<Record<TEvent, Promise<void>>> = {}
+        protected __waiters_: Partial<Record<_TEvent, Promise<void>>> = {}
 
         protected __log_: boolean = false;
         protected __alias_: string = '[EventDriver]';
-        protected __key_: (key: any) => TEvent = (key: any) => key as TEvent;
-        protected __events_: Partial<Record<TEvent, pFlex.IBinder[]>> = {};
+        protected __key_: (key: any) => _TEvent = (key: any) => key as _TEvent;
+        protected __events_: Partial<Record<_TEvent, pFlex.IBinder[]>> = {};
 
-        async wait(key: TEvent) {
+        async wait(key: _TEvent) {
             const _key = this.__key_(key);
             const _otps = this._get(key);
 
             const _wait = this.__waiters_[_key];
-            if(!_wait) this.__waiters_[_key] = new Promise<void>( _rs => _otps.push(...this._map([() => _rs && _rs()])) )
+            if(!_wait) this.__waiters_[_key] = new Promise<void>( _rs => _otps.push(...pClass.mapper([() => _rs && _rs()])) )
             await this.__waiters_[_key];
         }
 
-        protected _actResetWaiter(key: TEvent) {
+        protected _actResetWaiter(key: _TEvent) {
             const _key = this.__key_(key);
             const _otps = this._get(key);
 
-            this.__waiters_[_key] = new Promise<void>( _rs => _otps.push(...this._map([() => _rs && _rs()])) )
+            this.__waiters_[_key] = new Promise<void>( _rs => _otps.push(...pClass.mapper([() => _rs && _rs()])) )
         }
 
-        protected _get(key: TEvent) {
+        protected _get(key: _TEvent) {
             key = this.__key_(key);
 
             this.__events_ ??= {};
@@ -80,41 +81,34 @@ namespace pDriver {
             return this.__events_[key];
         }
 
-        isEmpty(key: TEvent) {
+        isEmpty(key: _TEvent) {
             return this._get(key).length <= 0;
         }
 
-        protected _set(key: TEvent, value: pFlex.IBinder[]) {
+        protected _set(key: _TEvent, value: pFlex.IBinder[]) {
             key = this.__key_(key);
 
             this.__events_ ??= {};
             this.__events_[key] = value;
         }
 
-        protected _map(listener: pFlex.THandler[]): pFlex.IBinder[] {
-            return listener.map( ret => ( typeof ret === 'function' )
-                    ? { _function: ret, _priority: 0, _this: null, _args: undefined }
-                    : { _function: ret._function, _this: ret._this, _priority: ret._priority ?? 0, _args: ret._args }
-            );
-        }
-
-        set(event: TEvent, listener: pFlex.TArray<pFlex.THandler>, ...listeners: pFlex.THandler[]): void {
+        set(event: _TEvent, listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>, false>, ...listeners: pFlex.THandler<_TArgs, _TReturn>[]): void {
             this._set(event, []);
             this.add(event, listener, ...listeners);
         }
 
-        add(event: TEvent, listener: pFlex.TArray<pFlex.THandler>, ...listeners: pFlex.THandler[]): void {
+        add(event: _TEvent, listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>, false>, ...listeners: pFlex.THandler<_TArgs, _TReturn>[]): void {
             listeners = pArray.flatter(listener, ...listeners);
 
             const opts = this._get(event);
-            opts.push(...this._map(listeners));
+            opts.push(...pClass.mapper(listeners));
             opts.sort((a, b) => a._priority - b._priority);
         }
 
-        remove(event: TEvent, listener: pFlex.TArray<pFlex.THandler>, ...listeners: pFlex.THandler[]): void {
+        remove(event: _TEvent, listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>, false>, ...listeners: pFlex.THandler<_TArgs, _TReturn>[]): void {
             listeners = pArray.flatter(listener, ...listeners);
 
-            const map = this._map(listeners);
+            const map = pClass.mapper(listeners);
             const opts = this._get(event).filter( opt => {
                 const index = map.findIndex( _opt => _opt._function === opt._function && _opt._this === opt._this )
                 if(index < 0) return true;
@@ -126,11 +120,11 @@ namespace pDriver {
             this._set(event, opts);
         }
 
-        clear(event: TEvent): void {
+        clear(event: _TEvent): void {
             this._set(event, []);
         }
 
-        invoke(event: TEvent, ...args: any[]): any[] {
+        invoke(event: _TEvent, ...args: any[]): any[] {
             try {
                 const _key = this.__key_(event);
                 const list = this._get(event);
@@ -151,11 +145,11 @@ namespace pDriver {
             }
         }
 
-        on(events: TFlex<TEvent>) {
-            for(const [ _key, _function, _this, _priority, _args ] of events) this.add(_key, { _function, _this, _priority, _args });
+        on(events: TFlex<_TEvent, _TArgs, _TReturn>) {
+            for(const [ _key, _function, _this, _priority, _args ] of events) this.add(_key, { _function, _this, _priority, _args, _brgs: [] as _TArgs });
         }
 
-        off(events: TFlex<TEvent>) {
+        off(events: TFlex<_TEvent, _TArgs, _TReturn>) {
             for(const [ _key, _function, _this ] of events) this.remove(_key, { _function, _this });
         }
     }

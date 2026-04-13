@@ -7,19 +7,19 @@ import pComponent from './pComponent'
 import pDriver from './pDriver'
 import pNumber from './pNumber'
 import pString from './pString'
-import * as pDecorator from './decorator'
+//import * as pDecorator from './decorator'
 
 export {
     pArray,
     pComponent,
     pClass,
-    pDecorator,
+    //pDecorator,
     pDriver,
     pNumber,
     pString,
 }
 
 
-manager.debug.register('utils', { pArray, pComponent, pClass, pDecorator, pDriver, pNumber, pString })
+manager.debug.register('utils', { pArray, pComponent, pClass, pDriver, pNumber, pString })
 
 

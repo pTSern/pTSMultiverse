@@ -8,14 +8,15 @@ const _ = {
                         : { _function: listener._function, _this: listener._this, _priority: listener._priority ?? 0, _args: listener._args }
     },
 
-    mapper(listener: pFlex.TArray<pFlex.THandler>, out?: pFlex.IBinder[]): pFlex.IBinder[] {
+    mapper<_TArgs, _TReturn>(listener: pFlex.TArray<pFlex.THandler<_TArgs, _TReturn>>, out?: pFlex.IBinder<_TArgs, _TReturn>[]): pFlex.IBinder<_TArgs, _TReturn>[] {
         if(!listener) return [];
         listener = pArray.flatter(listener);
 
         out = listener.filter(Boolean)
                        .map( ret => ( typeof ret === 'function' )
-                            ? { _function: ret, _priority: 0, _this: null, _args: [], _brgs: [] }
-                            : { _function: ret._function, _this: ret._this, _priority: ret._priority ?? 0, _args: ret._args }
+                            ? { _function: ret, _priority: 0, _this: null, _args: [] as _TArgs, _brgs: [] as _TArgs }
+                            : { _function: ret._function, _this: ret._this, _priority: ret._priority ?? 0, _args: ret._args, _brgs: [] as _TArgs }
+
         );
 
         return out;
