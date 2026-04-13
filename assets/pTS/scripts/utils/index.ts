@@ -7,6 +7,7 @@ import pNumber from './pNumber'
 import pString from './pString'
 import pNode from './pNode'
 import pConst from './pConst'
+import pEasing from './pEasing'
 import * as pDecorator from './decorator'
 
 export {
@@ -18,6 +19,7 @@ export {
     pDriver,
     pNumber,
     pString,
-    pConst
+    pConst,
+    pEasing,
 }
 

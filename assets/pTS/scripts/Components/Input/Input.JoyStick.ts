@@ -1,7 +1,7 @@
-import { _decorator, Component, Node, EventTouch, v3, UITransform, Vec2, v2, Label, UIOpacity, Tween, tween } from "cc";
+import { _decorator, Component, Node, EventTouch, Label, UIOpacity, Tween, tween, TweenEasing } from "cc";
 import { Base_Driver } from "../Base/Base.Driver";
 import { Types_TTouchType } from "../../types/Types.TTouchType";
-import { pComponent, pConst, pNode } from "../../utils";
+import { pComponent, pConst, pNode, pEasing } from "../../utils";
 import { DEBUG } from "cc/env";
 
 const { ccclass, property } = _decorator;
@@ -26,6 +26,9 @@ export class Input_JoyStick extends Component {
     @property({ min: 0, group: pConst.group.core })
     numFadeDur: number = 0.2;
 
+    @property({ type: pEasing , group: pConst.group.core })
+    easeFade: TweenEasing = 'smooth';
+
     @property({ type: Label, group: pConst.group.editor })
     labDebug: Label = null;
 
@@ -40,7 +43,7 @@ export class Input_JoyStick extends Component {
         if(!this.driver) return;
 
         this._opx = pComponent.getSafeComp(this.root, UIOpacity);
-        this._tween = tween(this._opx).to(this.numFadeDur, { opacity: 0 }, { easing: 'fade' });
+        this._tween = tween(this._opx).to(this.numFadeDur, { opacity: 0 }, { easing: this.easeFade });
 
         this.driver.add('onTouchStart', { _function: this._onTouchStart, _this: this });
         this.driver.add('onTouchMove', { _function: this._onTouchMove, _this: this });
